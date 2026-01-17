@@ -3,570 +3,151 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>생활습관점수표</title>
+  <title>생활습관점수표 - 분당서울대학교병원</title>
   <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
   <style>
-    :root {
-      --primary-color: #4F46E5; /* 세련된 인디고 블루 */
-      --primary-light: #EEF2FF;
-      --text-color: #1F2937;
-      --gray-color: #6B7280;
-      --bg-color: #F9FAFB;
-      --card-bg: #FFFFFF;
-      --success-color: #10B981;
-      --warning-color: #F59E0B;
-      --danger-color: #EF4444;
+    :root { 
+      --primary: #4F46E5; 
+      --primary-light: #EEF2FF; 
+      --text: #1F2937; 
+      --bg: #F9FAFB; 
     }
-
-    * {
-      box-sizing: border-box;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    body {
-      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
-      background-color: var(--bg-color);
-      color: var(--text-color);
-      margin: 0;
-      padding: 20px 16px;
-      line-height: 1.5;
-    }
-
-    .container {
-      max-width: 640px;
-      margin: 0 auto;
-    }
-
-    header {
-      text-align: center;
-      margin-bottom: 32px;
-    }
-
-    h1 {
-      font-size: 1.75rem;
-      font-weight: 700;
-      color: var(--text-color);
-      margin: 0 0 8px 0;
-    }
-
-    .description {
-      color: var(--gray-color);
-      font-size: 0.95rem;
-      margin: 0;
-    }
-
-    .question-card {
-      background: var(--card-bg);
-      border-radius: 16px;
-      padding: 24px 20px;
-      margin-bottom: 20px;
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-
-    .question-title {
-      font-size: 1.15rem;
-      font-weight: 600;
-      margin-bottom: 16px;
-      color: var(--text-color);
-      display: flex;
-      align-items: baseline;
-    }
-
-    .question-number {
-      color: var(--primary-color);
-      font-weight: 800;
-      margin-right: 8px;
-      font-size: 1.2rem;
-    }
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    body { font-family: 'Pretendard', sans-serif; background: var(--bg); color: var(--text); padding: 20px 16px; margin: 0; }
+    .container { max-width: 640px; margin: 0 auto; }
+    header { text-align: center; margin-bottom: 30px; }
     
-    .question-subtitle {
-        font-size: 0.9rem;
-        color: var(--gray-color);
-        font-weight: 400;
-        margin-top: -12px;
-        margin-bottom: 16px;
-        display: block;
+    /* 카드 디자인 */
+    .question-card, .patient-card { 
+      background: white; 
+      border-radius: 16px; 
+      padding: 24px; 
+      margin-bottom: 20px; 
+      box-shadow: 0 4px 6px rgba(0,0,0,0.05); 
     }
 
-    .options {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .option-label {
-      position: relative;
-      display: flex;
-      align-items: flex-start; /* 텍스트가 길어질 경우 상단 정렬 */
-      padding: 14px 16px;
-      background-color: var(--bg-color);
-      border: 2px solid transparent;
-      border-radius: 12px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      font-size: 0.95rem;
-      color: var(--text-color);
-    }
-
-    .option-label:active {
-      transform: scale(0.98);
-    }
-
-    .option-radio {
-      appearance: none;
-      -webkit-appearance: none;
-      min-width: 22px;
-      height: 22px;
-      border: 2px solid var(--gray-color);
-      border-radius: 50%;
-      margin-right: 12px;
-      margin-top: 2px; /* 텍스트 줄맞춤 보정 */
-      position: relative;
-      transition: all 0.2s ease;
-      flex-shrink: 0; /* 라디오 버튼 크기 유지 */
-    }
-
-    .option-radio:checked {
-      border-color: var(--primary-color);
-      background-color: var(--primary-color);
-    }
-
-    .option-radio:checked::after {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 10px;
-      height: 10px;
-      background-color: white;
-      border-radius: 50%;
-    }
-
-    /* 라디오 버튼 선택 시 라벨 스타일 변경 */
-    .option-radio:checked + .option-text {
-        font-weight: 600;
-        color: var(--primary-color);
-    }
-    .option-label:has(.option-radio:checked) {
-      background-color: var(--primary-light);
-      border-color: var(--primary-color);
-    }
-
-    .btn-submit {
-      display: block;
-      width: 100%;
-      padding: 18px;
-      background-color: var(--primary-color);
-      color: white;
-      border: none;
-      border-radius: 16px;
-      font-size: 1.1rem;
-      font-weight: 700;
-      cursor: pointer;
-      transition: background-color 0.3s, transform 0.2s;
-      margin-top: 40px;
-      box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.2), 0 2px 4px -1px rgba(79, 70, 229, 0.1);
-    }
-
-    .btn-submit:active {
-      transform: scale(0.97);
-      background-color: #4338CA;
-    }
-
-    #result {
-      display: none; /* 초기에는 숨김 */
-      margin-top: 40px;
-      padding: 32px 24px;
-      background: var(--card-bg);
-      border-radius: 24px;
-      text-align: center;
-      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-      animation: slideUp 0.5s ease-out;
-    }
-
-    @keyframes slideUp {
-      from { opacity: 0; transform: translateY(30px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .result-title {
-      font-size: 1.3rem;
-      font-weight: 600;
-      color: var(--gray-color);
-      margin-bottom: 8px;
-    }
-
-    .score-display {
-      font-size: 4rem;
-      font-weight: 800;
-      line-height: 1;
-      margin: 16px 0 24px;
-      background: linear-gradient(135deg, var(--primary-color), #818CF8);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      display: inline-block;
-    }
-
-    .result-message {
-      padding: 20px;
-      border-radius: 16px;
-      font-size: 1.1rem;
-      line-height: 1.6;
-    }
-
-    .pass-message {
-      background-color: #ECFDF5;
-      color: var(--success-color);
-      border: 1px solid #A7F3D0;
-    }
-
-    .fail-message {
-      background-color: #FEF2F2;
-      color: var(--danger-color);
-      border: 1px solid #FECACA;
-    }
+    /* 환자 ID 입력란 스타일 */
+    .input-label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.95rem; }
+    .text-input { width: 100%; padding: 14px; border-radius: 12px; border: 2px solid #E5E7EB; font-size: 1rem; }
+    .input-hint { font-size: 0.85rem; color: #6B7280; margin-top: 6px; display: block; }
     
-    .score-badge {
-        display: inline-block;
-        padding: 4px 12px;
-        border-radius: 20px;
-        font-size: 0.8rem;
-        font-weight: 600;
-        background-color: var(--primary-light);
-        color: var(--primary-color);
-        margin-left: auto; /* 우측 정렬 */
-    }
-
+    /* 질문지 공통 스타일 */
+    .question-title { font-weight: 600; margin-bottom: 16px; font-size: 1.1rem; }
+    .options { display: flex; flex-direction: column; gap: 10px; }
+    .option-label { display: flex; padding: 14px; background: var(--bg); border: 2px solid transparent; border-radius: 12px; cursor: pointer; font-size: 0.95rem; align-items: center; }
+    .option-radio { margin-right: 12px; width: 20px; height: 20px; flex-shrink: 0; }
+    .option-label:has(.option-radio:checked) { background: var(--primary-light); border-color: var(--primary); font-weight: 600; }
+    .btn-submit { width: 100%; padding: 18px; background: var(--primary); color: white; border: none; border-radius: 16px; font-size: 1.1rem; font-weight: 700; cursor: pointer; }
+    .score-badge { margin-left: auto; color: var(--primary); font-size: 0.85rem; font-weight: bold; }
+    
+    /* 결과 화면 스타일 */
+    #result { display: none; text-align: center; background: white; padding: 40px 24px; border-radius: 24px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); margin-top: 20px; }
+    .score-val { font-size: 4rem; font-weight: 800; color: var(--primary); margin: 20px 0; }
+    .result-msg-box { padding: 24px; border-radius: 16px; line-height: 1.8; font-size: 1.05rem; text-align: left; }
   </style>
 </head>
 <body>
   <div class="container">
     <header>
-      <h1>생활습관점수표</h1>
-      <p class="description">지난 한 달을 돌아보며 솔직하게 체크해주세요.</p>
+      <h1 style="font-size: 1.8rem; font-weight: 800;">생활습관점수표</h1>
+      <p style="color: #6B7280;">지난 한 달간의 습관을 체크해 주세요.</p>
     </header>
-    
-    <form id="assessmentForm" onsubmit="calculateScore(event)">
-      
-      <div class="question-card">
-        <div class="question-title">
-          <span class="question-number">01</span>
-          꾸준한 약물 복용
+
+    <form id="lifestyleForm">
+      <div class="patient-card">
+        <label class="input-label">등록번호 또는 이니셜+생년월일</label>
+        <input type="text" id="patientID" class="text-input" placeholder="여기에 입력하세요" required>
+        <span class="input-hint">예: 43445678 또는 HGD19990305</span>
+      </div>
+
+      <div id="questions-area">
+        <div class="question-card">
+          <div class="question-title">01. 꾸준한 약물 복용</div>
+          <div class="options">
+            <label class="option-label"><input type="radio" name="q1" value="40" class="option-radio" required><span>의사 지시대로 규칙적 복용</span><span class="score-badge">40점</span></label>
+            <label class="option-label"><input type="radio" name="q1" value="20" class="option-radio"><span>한두 번 놓쳤지만 거의 복용</span><span class="score-badge">20점</span></label>
+            <label class="option-label"><input type="radio" name="q1" value="10" class="option-radio"><span>일주일 정도 못 했지만 나머지 복용</span><span class="score-badge">10점</span></label>
+            <label class="option-label"><input type="radio" name="q1" value="0" class="option-radio"><span>일주일 이상 복용하지 않음</span><span class="score-badge">0점</span></label>
+          </div>
         </div>
-        <div class="options">
-          <label class="option-label">
-            <input type="radio" name="q1" value="40" class="option-radio" required>
-            <span class="option-text">약을 의사의 지시대로 규칙적인 시간에 모두 복용하였다.</span>
-            <span class="score-badge">40점</span>
-          </label>
-          <label class="option-label">
-            <input type="radio" name="q1" value="20" class="option-radio">
-            <span class="option-text">한 두 번 어쩔 수 없이 복용하지 못했지만 나머지 약은 모두 복용했다.</span>
-            <span class="score-badge">20점</span>
-          </label>
-          <label class="option-label">
-            <input type="radio" name="q1" value="10" class="option-radio">
-            <span class="option-text">일주일 정도 약을 복용하지 못했지만 나머지 약은 모두 복용했다.</span>
-            <span class="score-badge">10점</span>
-          </label>
-          <label class="option-label">
-            <input type="radio" name="q1" value="0" class="option-radio">
-            <span class="option-text">일주일 이상 약을 복용하지 않았다.</span>
-            <span class="score-badge">0점</span>
-          </label>
+        
+        <div class="question-card">
+          <div class="question-title">09. 스스로를 아껴 주기</div>
+          <div class="options">
+            <label class="option-label"><input type="radio" name="q9" value="5" class="option-radio" required><span>자신을 격려하고 아껴줌</span><span class="score-badge">5점</span></label>
+            <label class="option-label"><input type="radio" name="q9" value="3" class="option-radio"><span>자책해도 곧 너그러워짐</span><span class="score-badge">3점</span></label>
+            <label class="option-label"><input type="radio" name="q9" value="1" class="option-radio"><span>완벽주의와 자책이 잦음</span><span class="score-badge">1점</span></label>
+            <label class="option-label"><input type="radio" name="q9" value="0" class="option-radio"><span>자기를 비난하며 지냄</span><span class="score-badge">0점</span></label>
+          </div>
         </div>
       </div>
 
-      <div class="question-card">
-        <div class="question-title">
-          <span class="question-number">02</span>
-          규칙적인 수면
-        </div>
-        <div class="options">
-          <label class="option-label">
-            <input type="radio" name="q2" value="20" class="option-radio" required>
-            <span class="option-text">평일과 주말 모두 오전에 일정한 시간에 일어나 활동을 시작했다.</span>
-            <span class="score-badge">20점</span>
-          </label>
-          <label class="option-label">
-            <input type="radio" name="q2" value="10" class="option-radio">
-            <span class="option-text">대부분은 일정한 시간에 일어났지만 일주일 정도는 늦게까지 자거나 낮잠을 잤다.</span>
-            <span class="score-badge">10점</span>
-          </label>
-          <label class="option-label">
-            <input type="radio" name="q2" value="5" class="option-radio">
-             <span class="option-text">한달 동안 절반 정도는 규칙적으로 일어났지만, 나머지 절반 정도는 그렇지 못했다.</span>
-            <span class="score-badge">5점</span>
-          </label>
-          <label class="option-label">
-            <input type="radio" name="q2" value="0" class="option-radio">
-            <span class="option-text">대부분의 날 동안 일어나는 시간이 뒤죽박죽이었다.</span>
-            <span class="score-badge">0점</span>
-          </label>
-        </div>
-      </div>
-
-      <div class="question-card">
-        <div class="question-title">
-          <span class="question-number">03</span>
-          꾸준한 운동
-        </div>
-        <div class="options">
-          <label class="option-label">
-            <input type="radio" name="q3" value="10" class="option-radio" required>
-            <span class="option-text">거의 매일 한 시간 이상 운동을 했다.</span>
-            <span class="score-badge">10점</span>
-          </label>
-          <label class="option-label">
-            <input type="radio" name="q3" value="5" class="option-radio">
-            <span class="option-text">거의 매일 30분 이상 운동을 했다.</span>
-            <span class="score-badge">5점</span>
-          </label>
-          <label class="option-label">
-            <input type="radio" name="q3" value="2" class="option-radio">
-            <span class="option-text">운동을 하지 않은 날이 운동을 한 날보다 많았다.</span>
-            <span class="score-badge">2점</span>
-          </label>
-          <label class="option-label">
-            <input type="radio" name="q3" value="0" class="option-radio">
-            <span class="option-text">거의 운동을 하지 않았다.</span>
-            <span class="score-badge">0점</span>
-          </label>
-        </div>
-      </div>
-
-       <div class="question-card">
-        <div class="question-title">
-          <span class="question-number">04</span>
-          햇빛 보기
-        </div>
-        <div class="options">
-          <label class="option-label">
-            <input type="radio" name="q4" value="5" class="option-radio" required>
-            <span class="option-text">매일 낮에 한 번은 밖으로 나가 30분 이상 햇빛을 쬐었다.</span>
-            <span class="score-badge">5점</span>
-          </label>
-          <label class="option-label">
-            <input type="radio" name="q4" value="3" class="option-radio">
-            <span class="option-text">거의 매일 낮에 밖에 나가 햇빛을 쬐거나 실내에서라도 햇빛을 쬐었다.</span>
-            <span class="score-badge">3점</span>
-          </label>
-          <label class="option-label">
-            <input type="radio" name="q4" value="1" class="option-radio">
-            <span class="option-text">한달 동안 절반 정도는 햇빛을 쬐었다.</span>
-            <span class="score-badge">1점</span>
-          </label>
-          <label class="option-label">
-            <input type="radio" name="q4" value="0" class="option-radio">
-            <span class="option-text">대부분의 날 동안 낮에 외출하지 않고, 실내에서도 햇빛을 보지 않았다.</span>
-            <span class="score-badge">0점</span>
-          </label>
-        </div>
-      </div>
-
-      <div class="question-card">
-        <div class="question-title">
-          <span class="question-number">05</span>
-          음주 피하기
-        </div>
-        <div class="options">
-          <label class="option-label">
-            <input type="radio" name="q5" value="5" class="option-radio" required>
-            <span class="option-text">술을 전혀 마시지 않았다.</span>
-            <span class="score-badge">5점</span>
-          </label>
-          <label class="option-label">
-            <input type="radio" name="q5" value="3" class="option-radio">
-            <span class="option-text">한 번 정도 적은 양(한 잔)을 정도 마셨다.</span>
-            <span class="score-badge">3점</span>
-          </label>
-          <label class="option-label">
-            <input type="radio" name="q5" value="1" class="option-radio">
-            <span class="option-text">7일 정도 한 번에 서너 잔 이내로 마셨다.</span>
-            <span class="score-badge">1점</span>
-          </label>
-          <label class="option-label">
-            <input type="radio" name="q5" value="0" class="option-radio">
-            <span class="option-text">술을 마신 날이 7일 이상 있거나, 한 병 이상 과음하는 날이 있었다.</span>
-            <span class="score-badge">0점</span>
-          </label>
-        </div>
-      </div>
-
-      <div class="question-card">
-        <div class="question-title">
-          <span class="question-number">06</span>
-          대인관계 관리
-        </div>
-        <div class="options">
-          <label class="option-label">
-            <input type="radio" name="q6" value="5" class="option-radio" required>
-            <span class="option-text">다른 사람들의 반응에 크게 개의치 않았다.</span>
-            <span class="score-badge">5점</span>
-          </label>
-          <label class="option-label">
-            <input type="radio" name="q6" value="3" class="option-radio">
-            <span class="option-text">다른 사람들의 반응에 기쁘거나 슬프고 화가 날 때도 있었지만 오래 담아두지 않았다.</span>
-            <span class="score-badge">3점</span>
-          </label>
-          <label class="option-label">
-            <input type="radio" name="q6" value="1" class="option-radio">
-            <span class="option-text">다른 사람들의 반응에 영향을 받아 자주 생각했다.</span>
-            <span class="score-badge">1점</span>
-          </label>
-          <label class="option-label">
-            <input type="radio" name="q6" value="0" class="option-radio">
-            <span class="option-text">다른 사람들의 반응을 하루 종일 생각할 때가 많았다.</span>
-            <span class="score-badge">0점</span>
-          </label>
-        </div>
-      </div>
-
-      <div class="question-card">
-        <div class="question-title">
-          <span class="question-number">07</span>
-          무리하고 성급하거나 자극적인 일을 피하기
-        </div>
-        <span class="question-subtitle">(과소비, 도박, 과도한 활동, 무리한 약속, 폭식, 약물의 남용, 무리한 계획이나 상상 등)</span>
-        <div class="options">
-          <label class="option-label">
-            <input type="radio" name="q7" value="5" class="option-radio" required>
-            <span class="option-text">꾸준히 나아질 수 있다는 믿음을 가지고 무리하거나 성급하지 않고, 주어진 일을 해왔다.</span>
-            <span class="score-badge">5점</span>
-          </label>
-          <label class="option-label">
-            <input type="radio" name="q7" value="3" class="option-radio">
-            <span class="option-text">무리하고 성급하거나 자극적인 일을 생각하기도 했지만 대부분 일상을 일정하게 유지하며 보냈다.</span>
-            <span class="score-badge">3점</span>
-          </label>
-          <label class="option-label">
-            <input type="radio" name="q7" value="1" class="option-radio">
-            <span class="option-text">때때로 기분을 빨리 나아지게 하기 위해 무리하고 성급하거나 자극적인 일을 계획하거나 시도했다.</span>
-            <span class="score-badge">1점</span>
-          </label>
-          <label class="option-label">
-            <input type="radio" name="q7" value="0" class="option-radio">
-            <span class="option-text">거의 매일 무리하고 성급하거나 자극적인 일들도 계획하거나 시도했다.</span>
-            <span class="score-badge">0점</span>
-          </label>
-        </div>
-      </div>
-
-      <div class="question-card">
-        <div class="question-title">
-          <span class="question-number">08</span>
-          스스로의 기분을 관찰하기
-        </div>
-        <div class="options">
-          <label class="option-label">
-            <input type="radio" name="q8" value="5" class="option-radio" required>
-            <span class="option-text">매일 기분기록지를 적고, 자신의 기분을 관찰했다.</span>
-            <span class="score-badge">5점</span>
-          </label>
-          <label class="option-label">
-            <input type="radio" name="q8" value="3" class="option-radio">
-            <span class="option-text">한달 동안 절반 이상은 기분기록지를 적고, 밀린 날 동안의 기분을 늦게라도 살펴보았다.</span>
-            <span class="score-badge">3점</span>
-          </label>
-          <label class="option-label">
-            <input type="radio" name="q8" value="1" class="option-radio">
-            <span class="option-text">기분기록지를 거의 적지 않았고, 가끔 자기 기분을 돌아보았다.</span>
-            <span class="score-badge">1점</span>
-          </label>
-          <label class="option-label">
-            <input type="radio" name="q8" value="0" class="option-radio">
-            <span class="option-text">스스로의 기분을 생각하지 않고 지냈다.</span>
-            <span class="score-badge">0점</span>
-          </label>
-        </div>
-      </div>
-
-      <div class="question-card">
-        <div class="question-title">
-          <span class="question-number">09</span>
-          스스로를 아껴 주기
-        </div>
-        <div class="options">
-          <label class="option-label">
-            <input type="radio" name="q9" value="5" class="option-radio" required>
-            <span class="option-text">스스로에게 엄격하거나 자책하지 않고 잘하지 못할 때에도 자신을 격려했다.</span>
-            <span class="score-badge">5점</span>
-          </label>
-          <label class="option-label">
-            <input type="radio" name="q9" value="3" class="option-radio">
-            <span class="option-text">자책할 때도 있었지만 곧 자신에게 너그러운 마음을 가지려고 했다.</span>
-            <span class="score-badge">3점</span>
-          </label>
-          <label class="option-label">
-            <input type="radio" name="q9" value="1" class="option-radio">
-            <span class="option-text">완벽주의적 생각에 자책하고 후회하는 날이 많았다.</span>
-            <span class="score-badge">1점</span>
-          </label>
-          <label class="option-label">
-            <input type="radio" name="q9" value="0" class="option-radio">
-            <span class="option-text">거의 대부분 자기를 책망하고 비난하며 보내고 자신에 대해 긍정적으로 생각할 수 없었다.</span>
-            <span class="score-badge">0점</span>
-          </label>
-        </div>
-      </div>
-
-      <button type="submit" class="btn-submit">결과 확인하기</button>
+      <button type="submit" id="submitBtn" class="btn-submit">제출 및 결과 보기</button>
     </form>
 
     <div id="result">
-      <div class="result-title">이번 달 나의 점수</div>
-      <div id="totalScore" class="score-display">0</div>
-      <div id="resultMessage" class="result-message"></div>
+      <h3>이번 달 나의 점수</h3>
+      <div id="totalScore" class="score-val">0</div>
+      <div id="msg" class="result-msg-box"></div>
+      <button onclick="location.reload()" style="margin-top:20px; background:#94a3b8; border:none; color:white; padding:12px 24px; border-radius:10px; cursor:pointer; font-weight:600;">다시 하기</button>
     </div>
   </div>
 
   <script>
-    function calculateScore(event) {
-      event.preventDefault();
-      
+    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfyc... (배포한 URL)';
+
+    document.getElementById('lifestyleForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const btn = document.getElementById('submitBtn');
+      btn.disabled = true;
+      btn.textContent = "데이터 저장 중...";
+
       let totalScore = 0;
+      let answers = {};
       for (let i = 1; i <= 9; i++) {
-        const selectedOption = document.querySelector(`input[name="q${i}"]:checked`);
-        if (selectedOption) {
-          totalScore += parseInt(selectedOption.value);
+        const selected = document.querySelector(`input[name="q${i}"]:checked`);
+        if(selected) {
+          const val = selected.value;
+          totalScore += parseInt(val);
+          answers[`q${i}`] = val;
         }
       }
 
-      const resultDiv = document.getElementById('result');
-      const scoreDisplay = document.getElementById('totalScore');
-      const messageDisplay = document.getElementById('resultMessage');
+      try {
+        await fetch(GOOGLE_SCRIPT_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          body: JSON.stringify({
+            patientID: document.getElementById('patientID').value,
+            totalScore: totalScore,
+            answers: answers
+          })
+        });
 
-      // 숫자 카운트 업 애니메이션
-      let currentScore = 0;
-      const interval = setInterval(() => {
-          currentScore += Math.ceil(totalScore / 20); 
-          if (currentScore >= totalScore) {
-              currentScore = totalScore;
-              clearInterval(interval);
-          }
-          scoreDisplay.textContent = currentScore;
-      }, 20);
+        // 결과 화면 전환 및 메시지 출력
+        document.getElementById('lifestyleForm').style.display = 'none';
+        const resultDiv = document.getElementById('result');
+        resultDiv.style.display = 'block';
+        document.getElementById('totalScore').textContent = totalScore;
+        
+        const msg = document.getElementById('msg');
+        if (totalScore >= 80) {
+          msg.style.background = "#ECFDF5"; 
+          msg.style.color = "#10B981";
+          msg.innerHTML = "<strong>훌륭합니다!</strong> 안정적으로 잘 관리하고 계시네요. 항상 좋은 생활 습관을 유지하세요!";
+        } else {
+          msg.style.background = "#FEF2F2"; 
+          msg.style.color = "#EF4444";
+          msg.innerHTML = "<strong>조금 더 힘내세요!</strong> 좋은 생활 습관이 병을 극복하고 유지하는데 중요합니다.";
+        }
+        window.scrollTo(0, 0);
 
-
-      resultDiv.style.display = 'block';
-
-      if (totalScore >= 80) {
-        messageDisplay.className = 'result-message pass-message';
-        messageDisplay.innerHTML = "🎉 <strong>훌륭합니다!</strong><br>안정적으로 잘 관리하고 계시네요.<br>지금의 좋은 습관을 계속 유지해주세요.";
-      } else {
-        messageDisplay.className = 'result-message fail-message';
-        messageDisplay.innerHTML = "💪 <strong>조금 더 힘내세요!</strong><br>규칙적인 생활 리듬을 찾는 것이 중요해요.<br>약물 복용과 수면 패턴부터 점검해보는 건 어떨까요?";
+      } catch (err) {
+        alert("오류가 발생했습니다: " + err.message);
+        btn.disabled = false;
+        btn.textContent = "제출 및 결과 보기";
       }
-
-      // 부드럽게 스크롤 이동
-      setTimeout(() => {
-          resultDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }, 100);
-    }
+    });
   </script>
 </body>
-
 </html>
-
