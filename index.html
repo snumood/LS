@@ -163,6 +163,23 @@
     .text-input { width: 100%; padding: 14px; border-radius: 12px; border: 2px solid #E5E7EB; font-size: 1rem; outline: none; }
     .text-input:focus { border-color: var(--form-primary); }
     .input-hint { font-size: 0.85rem; color: #6B7280; margin-top: 8px; display: block; }
+
+    /* 환자번호 기억 버튼 스타일 추가 */
+    .btn-save-id {
+      margin-top: 12px;
+      background: #F3F4F6;
+      border: 1.5px solid #E5E7EB;
+      color: #4B5563;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-save-id:active {
+      background: #E5E7EB;
+    }
     
     .question-title { font-weight: 700; margin-bottom: 16px; font-size: 1.1rem; color: #111827; }
     .question-subtitle { font-size: 0.9rem; color: #6B7280; margin-top: -12px; margin-bottom: 16px; display: block; font-weight: 400; }
@@ -232,6 +249,7 @@
         <label class="input-label">등록번호 또는 이니셜+생년월일</label>
         <input type="text" id="patientID" class="text-input" placeholder="여기에 입력하세요" required>
         <span class="input-hint">예: 43445678 또는 HGD19990305</span>
+        <button type="button" id="saveIdBtn" class="btn-save-id">환자번호 기억하기</button>
       </div>
 
       <div class="question-card">
@@ -345,6 +363,30 @@
         menuToggle.classList.toggle('is-active');
         navMenu.classList.toggle('is-active');
     });
+
+    // --- 환자번호 저장 로직 추가 ---
+    const patientInput = document.getElementById('patientID');
+    const saveIdBtn = document.getElementById('saveIdBtn');
+
+    // 페이지 로드 시 저장된 번호가 있으면 가져오기
+    window.addEventListener('DOMContentLoaded', () => {
+      const savedID = localStorage.getItem('snumood_patientID');
+      if (savedID) {
+        patientInput.value = savedID;
+      }
+    });
+
+    // 버튼 클릭 시 현재 입력된 번호 저장
+    saveIdBtn.addEventListener('click', () => {
+      const currentID = patientInput.value.trim();
+      if (currentID) {
+        localStorage.setItem('snumood_patientID', currentID);
+        alert('환자번호가 브라우저에 저장되었습니다.');
+      } else {
+        alert('저장할 번호를 입력해주세요.');
+      }
+    });
+    // ----------------------------
 
     // 2. 설문 제출 로직 (유지)
     const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxcDRncWCJnD55v5lK4pV8ulSQjfV5XkAmx9vsOSwBCIgYu-81jdgEgzOFHxU9pj_QU/exec';
