@@ -164,21 +164,25 @@
     .text-input:focus { border-color: var(--form-primary); }
     .input-hint { font-size: 0.85rem; color: #6B7280; margin-top: 8px; display: block; }
 
-    /* 환자번호 기억 버튼 스타일 추가 */
-    .btn-save-id {
+    /* 체크박스 영역 스타일 */
+    .remember-container {
+      display: flex;
+      align-items: center;
       margin-top: 12px;
-      background: #F3F4F6;
-      border: 1.5px solid #E5E7EB;
-      color: #4B5563;
-      padding: 8px 16px;
-      border-radius: 8px;
-      font-size: 0.85rem;
-      font-weight: 600;
+      gap: 8px;
       cursor: pointer;
-      transition: all 0.2s;
+      user-select: none;
     }
-    .btn-save-id:active {
-      background: #E5E7EB;
+    .remember-checkbox {
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+      accent-color: var(--form-primary);
+    }
+    .remember-label {
+      font-size: 0.9rem;
+      color: #4B5563;
+      font-weight: 500;
     }
     
     .question-title { font-weight: 700; margin-bottom: 16px; font-size: 1.1rem; color: #111827; }
@@ -249,7 +253,11 @@
         <label class="input-label">등록번호 또는 이니셜+생년월일</label>
         <input type="text" id="patientID" class="text-input" placeholder="여기에 입력하세요" required>
         <span class="input-hint">예: 43445678 또는 HGD19990305</span>
-        <button type="button" id="saveIdBtn" class="btn-save-id">환자번호 기억하기</button>
+        
+        <label class="remember-container">
+          <input type="checkbox" id="rememberID" class="remember-checkbox">
+          <span class="remember-label">환자번호 기억하기</span>
+        </label>
       </div>
 
       <div class="question-card">
@@ -364,29 +372,41 @@
         navMenu.classList.toggle('is-active');
     });
 
-    // --- 환자번호 저장 로직 추가 ---
+    // --- 환자번호 저장 로직 (체크박스 버전) ---
     const patientInput = document.getElementById('patientID');
-    const saveIdBtn = document.getElementById('saveIdBtn');
+    const rememberCheckbox = document.getElementById('rememberID');
 
-    // 페이지 로드 시 저장된 번호가 있으면 가져오기
+    // 페이지 로드 시 저장된 정보 확인
     window.addEventListener('DOMContentLoaded', () => {
       const savedID = localStorage.getItem('snumood_patientID');
       if (savedID) {
         patientInput.value = savedID;
+        rememberCheckbox.checked = true; // 저장된 값이 있으면 체크박스 활성화
       }
     });
 
-    // 버튼 클릭 시 현재 입력된 번호 저장
-    saveIdBtn.addEventListener('click', () => {
-      const currentID = patientInput.value.trim();
-      if (currentID) {
-        localStorage.setItem('snumood_patientID', currentID);
-        alert('환자번호가 브라우저에 저장되었습니다.');
+    // 체크박스 상태 변경 시 동작
+    rememberCheckbox.addEventListener('change', () => {
+      if (rememberCheckbox.checked) {
+        const currentID = patientInput.value.trim();
+        if (currentID) {
+          localStorage.setItem('snumood_patientID', currentID);
+        } else {
+          alert('저장할 번호를 입력해주세요.');
+          rememberCheckbox.checked = false;
+        }
       } else {
-        alert('저장할 번호를 입력해주세요.');
+        localStorage.removeItem('snumood_patientID'); // 체크 해제 시 삭제
       }
     });
-    // ----------------------------
+
+    // 입력창 값이 바뀔 때 체크되어 있다면 실시간 반영
+    patientInput.addEventListener('input', () => {
+      if (rememberCheckbox.checked) {
+        localStorage.setItem('snumood_patientID', patientInput.value.trim());
+      }
+    });
+    // ----------------------------------------
 
     // 2. 설문 제출 로직 (유지)
     const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxcDRncWCJnD55v5lK4pV8ulSQjfV5XkAmx9vsOSwBCIgYu-81jdgEgzOFHxU9pj_QU/exec';
